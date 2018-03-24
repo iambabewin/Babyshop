@@ -1,0 +1,80 @@
+:global {
+    /*管理商品*/
+    .manageGoods {
+        .ant-table-row-indent {
+            padding-left: 18px!important;
+        }
+    }
+    
+    /*添加分类*/
+    .addCategory {
+        .box{
+            padding:24px;
+            background: #FFFFFF;
+            box-shadow: 0 2px 14px 0 rgba(0,0,0,0.09);
+            border-radius: 4px;
+            .ant-list-header .circle{
+                display: inline-block;
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: #2FAEA8;
+                margin-right: 8px;
+            }
+            .input {
+                padding: 20px;
+                display: flex;
+                justify-content: flex-start;
+                .title {
+                    height: 32px;
+                    line-height: 32px;
+                    margin-right: 10px;
+                    white-space:nowrap;                 
+                }
+            }
+            .property {
+                padding:20px;
+                .title {
+                    display: flex;
+                    justify-content: flex-start;
+                    margin:10px 0;
+                    span {
+                        display: block;
+                        height: 32px;
+                        line-height: 32px;
+                        white-space:nowrap; 
+                    }
+                }
+            }
+            .save {
+                background: #2FAEA8;
+                border-color: #2FAEA8;
+                margin:20px;
+            }
+        }
+    }
+
+    /*编辑分类模态框*/
+    .categoryModal {
+        .input {
+            margin: 15px;
+            .title {
+                margin-bottom: 5px;
+            }
+            .ant-input {
+                width: 300px;
+            }
+        }
+    }
+
+    /*添加属性*/
+    .addCategory {
+        .delete {
+            white-space:nowrap;
+            color: red;
+            position: relative;
+            top:7px;
+            left:5px;
+        }
+    }
+}
