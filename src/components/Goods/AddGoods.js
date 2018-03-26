@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'dva';
-import { Select, List, Input, Button, Upload, Icon } from 'antd';
+import { Select, List, Input, Button, Upload, Icon, Switch } from 'antd';
 import '../style.less'
 
 const Option = Select.Option;
@@ -40,10 +40,14 @@ class AddGoods extends React.Component {
       <div className="input" style={{padding:'5px 20px'}}>
         <div className="title">商品名称：</div>
         <Input />
+        <div className="title" style={{paddingLeft:50}}>商品价格：</div>
+          <Input />
       </div>,
       <div className="input" style={{padding:'5px 20px'}}>
-        <div className="title">商品价格：</div>
-          <Input />
+          <div className="title">热卖商品：</div>
+          <Switch style={{position:'relative',top:5}} />
+          <div className="title" style={{paddingLeft:50}}>店主推荐：</div>
+          <Switch style={{position:'relative',top:5}} />
       </div>,
       <div className="input" style={{padding:'5px 20px'}}>
         <div className="title">商品属性：</div>
@@ -51,12 +55,12 @@ class AddGoods extends React.Component {
           this.state.value === "奶粉辅食" ? 
           <div>
             <ul className="goodsproperty">
-              <li><span>商品名称:</span><Input /></li>
-              <li><span>奶粉阶段:</span><Input /></li>
-              <li><span>适用年龄:</span><Input /></li>
-              <li><span>规格:</span><Input /></li>
-              <li><span>产地:</span><Input /></li>
-              <li><span>奶粉类型:</span><Input /></li>
+              <li><span>商品名称：</span><Input /></li>
+              <li><span>奶粉阶段：</span><Input /></li>
+              <li><span>适用年龄：</span><Input /></li>
+              <li><span>规格：</span><Input /></li>
+              <li><span>产地：</span><Input /></li>
+              <li><span>奶粉类型：</span><Input /></li>
             </ul>
           </div> 
           : 
@@ -70,9 +74,7 @@ class AddGoods extends React.Component {
               <Icon type="upload" /> upload
             </Button>
           </Upload>
-      </div>,
-      <div className="input" style={{padding:'5px 20px'}}>
-        <div className="title">商品详情图：</div>
+        <div className="title" style={{paddingLeft:120}}>商品详情图：</div>
         <Upload {...props}>
           <Button>
             <Icon type="upload" /> upload
