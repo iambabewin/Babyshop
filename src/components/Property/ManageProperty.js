@@ -27,7 +27,7 @@ class ManageProperty extends React.Component {
       </div>,
       <div className="property">
         <div className="title"><span>属性id_01：</span><Input defaultValue="默认"/>
-        <Popconfirm title="确定要删除这个分类吗？" onConfirm={this.confirm} onCancel={this.cancel}>
+        <Popconfirm title="确定要删除这个属性吗？" onConfirm={this.confirm} onCancel={this.cancel}>
             <a className="delete">删除</a>
           </Popconfirm>
         </div>

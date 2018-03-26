@@ -39,13 +39,21 @@ class EditGoods extends React.Component {
             <Input defaultValue="338.00"/>
         </div>,
         <div className="input" style={{padding:'5px 20px'}}>
-        <div className="title">商品相册：</div>
+          <div className="title">商品预览图：</div>
+            <Upload {...props}>
+              <Button>
+                <Icon type="upload" /> upload
+              </Button>
+            </Upload>
+        </div>,
+        <div className="input" style={{padding:'5px 20px'}}>
+          <div className="title">商品详情图：</div>
           <Upload {...props}>
             <Button>
               <Icon type="upload" /> upload
             </Button>
           </Upload>
-      </div>,
+        </div>,
         <Button type="primary" className="save">保存</Button>
       ];
     return(

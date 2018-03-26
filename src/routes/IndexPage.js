@@ -43,7 +43,7 @@ class IndexPage extends React.Component {
                     <Route path="/addProperty" component={AddProperty} />
                     <Route path="/manageProperty" component={ManageProperty} />
                     <Route path="/countOrders" component={CountOrders} />
-                    <Redirect from="/" to="/addGoods" />
+                    {/* <Redirect from="/" to="/addGoods" /> */}
                 </Content>
             </Layout>
             </Content>

@@ -1,11 +1,14 @@
 import React from 'react';
 import { connect } from 'dva';
-import { Select, List, Input, Button } from 'antd';
+import { Select, List, Input, Button, Icon } from 'antd';
 import '../style.less'
 
 const Option = Select.Option;
 
 class AddProperty extends React.Component {
+  onClick = () => {
+    console.log('click！')
+  }
   render(){
     const data = [
       <div className="input">
@@ -21,6 +24,7 @@ class AddProperty extends React.Component {
       <div className="input">
         <div className="title">属性名称：</div>
         <Input />
+        <Icon type="plus-circle-o" className="icon" onClick={this.onClick}/>
       </div>,
       <Button type="primary" className="save">保存</Button>
 

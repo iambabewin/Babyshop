@@ -49,10 +49,6 @@ class ManageCategory extends React.Component {
       title: '分类id',
       dataIndex: 'categoryid',
       key: 'categoryid',
-    }, {
-      title: '父分类pid',
-      dataIndex: 'categoryPid',
-      key: 'categoryPid',
     },{
       title: '操作',
       key: 'action',
@@ -70,42 +66,32 @@ class ManageCategory extends React.Component {
       key: '1',
       categoryname: '奶粉辅食',
       categoryid:'1',
-      categoryPid:'0',
     },{
       key: '2',
       categoryname: '纸尿裤湿巾',
       categoryid:'2',
-      categoryPid:'0',
     },{
       key: '3',
       categoryname: '洗护用品',
       categoryid:'3',
-      categoryPid:'0',
     },{
       key: '4',
-      categoryname: '宝宝服饰',
+      categoryname: '童车座椅',
       categoryid:'4',
-      categoryPid:'0',
     },{
       key: '5',
-      categoryname: '童车座椅',
-      categoryid:'5',
-      categoryPid:'0',
-    },{
-      key: '6',
       categoryname: '玩具',
-      categoryid:'6',
-      categoryPid:'0',
+      categoryid:'5',
     }];
 
     const pagination = {
       total: data.length,
       showSizeChanger: true,
       onShowSizeChange(current, pageSize) {
-        console.log('Current: ', current, '; PageSize: ', pageSize);
+        //console.log('Current: ', current, '; PageSize: ', pageSize);
       },
       onChange(current) {
-        console.log('Current: ', current);
+        //console.log('Current: ', current);
       },
     };
 
