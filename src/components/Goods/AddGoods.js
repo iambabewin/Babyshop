@@ -21,8 +21,9 @@ class AddGoods extends React.Component {
       thumbUrl: '',
     }];
     const props = {
-      action: '//jsonplaceholder.typicode.com/posts/',
+      action: 'http://www.babyshop.com/api/preview/',
       listType: 'picture',
+      name: 'previews',
       defaultFileList: [...fileList],
     };
     const data = [
