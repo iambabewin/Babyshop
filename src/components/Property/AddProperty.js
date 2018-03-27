@@ -1,12 +1,34 @@
 import React from 'react';
 import { connect } from 'dva';
-import { Select, List, Input, Button } from 'antd';
+import { Select, List, Input, Button, Icon } from 'antd';
 import '../style.less'
 
 const Option = Select.Option;
 
 class AddProperty extends React.Component {
-  render(){
+  constructor(props) {
+    super(props);
+    this.state = {
+      propertys: [''],
+    }
+  }
+  onClickAdd = () => {
+    const { propertys } = this.state;
+    propertys.push('');
+    this.setState({ propertys });
+  }
+  onClickDel = (i) => {
+    const { propertys } = this.state;
+    propertys.splice(i,1);
+    this.setState({ propertys });
+  }
+  inputChange = (e, i) => {
+    console.log(e.target.value, i)
+    const { propertys } = this.state;
+    propertys[i] = e.target.value;
+    this.setState({ propertys });
+  }
+  render() {
     const data = [
       <div className="input">
         <div className="title">商品分类：</div>
@@ -20,22 +42,49 @@ class AddProperty extends React.Component {
       </div>,
       <div className="input">
         <div className="title">属性名称：</div>
-        <Input />
+        <div className="addProperty">
+          {
+            this.state.propertys.map((property, i) => {
+              if (this.state.propertys.length === 1) {
+                return (
+                  <div className="clickicon">
+                    <Input value={property[i]} onChange={(e) => this.inputChange(e, i)} />
+                    <Icon type="plus-circle-o" className="icon" onClick={this.onClickAdd} />
+                  </div>
+                )
+              } else {
+                if (i === this.state.propertys.length - 1) {
+                  return <div className="clickicon">
+                    <Input value={property[i]} onChange={(e) => this.inputChange(e, i)} />
+                    <Icon type="plus-circle-o" className="icon" onClick={this.onClickAdd} />
+                    <Icon type="minus-circle-o" className="icon-red" onClick={() => this.onClickDel(i)}/>
+                  </div>
+                } else {
+                  return <div className="clickicon">
+                    <Input value={property[i]} onChange={(e) => this.inputChange(e, i)} />
+                    <Icon type="minus-circle-o" className="icon-red" onClick={() => this.onClickDel(i)}/>
+                  </div>
+                }
+              }
+            })
+          }
+
+        </div>
       </div>,
       <Button type="primary" className="save">保存</Button>
 
 
     ];
-    return(
+    return (
       <div className="addCategory">
         <div className="box">
-            <List
-              size="large"
-              header={<div><span className="circle"></span>添加商品属性</div>}
-              dataSource={data}
-              renderItem={item => (
+          <List
+            size="large"
+            header={<div><span className="circle"></span>添加商品属性</div>}
+            dataSource={data}
+            renderItem={item => (
               <List.Item>{item}</List.Item>)}
-            />
+          />
         </div>
       </div>
     )

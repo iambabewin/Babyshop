@@ -1,18 +1,24 @@
 import React from 'react';
 import { connect } from 'dva';
-import { Select, List, Input, Button, Upload, Icon } from 'antd';
+import { Select, List, Input, Button, Upload, Icon, Switch } from 'antd';
 import '../style.less'
 
 const Option = Select.Option;
 
 class AddGoods extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      value:'',
+    }
+  }
   render(){
     const fileList = [{
       uid: -1,
-      name: 'xxx.png',
+      name: '',
       status: 'done',
-      url: 'http://img.boodoll.cn/pdt/img/b1/f500c8a4cccc49b8_380X380.jpg',
-      thumbUrl: 'http://img.boodoll.cn/pdt/img/b1/f500c8a4cccc49b8_380X380.jpg',
+      url: '',
+      thumbUrl: '',
     }];
     const props = {
       action: 'http://www.babyshop.com/api/preview/',
@@ -23,7 +29,8 @@ class AddGoods extends React.Component {
     const data = [
       <div className="input">
         <div className="title">所属分类</div>
-        <Select defaultValue="默认为顶级分类" style={{ width: 260 }}>
+        <Select defaultValue="默认为顶级分类" style={{ width: 260 }} 
+          onChange={(value)=> this.setState({value:value})}>
           <Option value="奶粉辅食">奶粉辅食</Option>
           <Option value="纸尿裤湿巾">纸尿裤湿巾</Option>
           <Option value="洗护用品">洗护用品</Option>
@@ -34,19 +41,47 @@ class AddGoods extends React.Component {
       <div className="input" style={{padding:'5px 20px'}}>
         <div className="title">商品名称：</div>
         <Input />
-      </div>,
-      <div className="input" style={{padding:'5px 20px'}}>
-        <div className="title">商品价格：</div>
+        <div className="title" style={{paddingLeft:50}}>商品价格：</div>
           <Input />
       </div>,
       <div className="input" style={{padding:'5px 20px'}}>
-      <div className="title">商品相册：</div>
+          <div className="title">热卖商品：</div>
+          <Switch style={{position:'relative',top:5}} />
+          <div className="title" style={{paddingLeft:50}}>店主推荐：</div>
+          <Switch style={{position:'relative',top:5}} />
+      </div>,
+      <div className="input" style={{padding:'5px 20px'}}>
+        <div className="title">商品属性：</div>
+        {
+          this.state.value === "奶粉辅食" ? 
+          <div>
+            <ul className="goodsproperty">
+              <li><span>商品名称：</span><Input /></li>
+              <li><span>奶粉阶段：</span><Input /></li>
+              <li><span>适用年龄：</span><Input /></li>
+              <li><span>规格：</span><Input /></li>
+              <li><span>产地：</span><Input /></li>
+              <li><span>奶粉类型：</span><Input /></li>
+            </ul>
+          </div> 
+          : 
+          <div style={{position:'relative',top:6}}>无</div>
+        }
+      </div>,
+      <div className="input" style={{padding:'5px 20px'}}>
+        <div className="title">商品预览图：</div>
+          <Upload {...props}>
+            <Button>
+              <Icon type="upload" /> upload
+            </Button>
+          </Upload>
+        <div className="title" style={{paddingLeft:120}}>商品详情图：</div>
         <Upload {...props}>
           <Button>
             <Icon type="upload" /> upload
           </Button>
         </Upload>
-    </div>,
+      </div>,
       <Button type="primary" className="save">保存</Button>
     ];
     return(
