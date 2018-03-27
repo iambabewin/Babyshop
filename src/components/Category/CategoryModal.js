@@ -17,7 +17,7 @@ class CategoryModal extends React.Component {
         >
             <div className="input">
                 <div className="title">分类名称：(修改前)</div>
-                <Input defaultValue="奶粉辅食"/>
+                <Input value={this.props.name} disabled />
             </div>
             <div className="input">
                 <div className="title">分类名称修改为：</div>

@@ -1,30 +1,39 @@
 import React from 'react';
-import { Table, Icon, Select, Popconfirm, message, Modal  } from 'antd';
+import { Table, Icon, Select, Popconfirm, message, Modal } from 'antd';
 import CategoryModal from './CategoryModal';
+import { connect } from 'dva';
 import '../style.less'
 
 const Option = Select.Option;
+const pageSize = 8;
 
 class ManageCategory extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
-      visible:false,
+      visible: false,
+      page: 1,
+      editedName: '',
     }
   }
 
-   confirm = () => {
+  componentDidMount() {
+    this.GetCategory()
+  }
+
+  confirm = () => {
     message.success('点击了确定');
   }
-  
-   cancel = () => {
+
+  cancel = () => {
     message.error('点击了取消');
   }
 
-  showModal = (e) => {
-      this.setState({
+  showModal = (e, name) => {
+    this.setState({
       visible: true,
-      });
+      editedName: name
+    });
   }
 
   handleOk = (e) => {
@@ -40,67 +49,70 @@ class ManageCategory extends React.Component {
     });
   }
 
+  /**获取所有分类 */
+  GetCategory = (page) => {
+    this.props.dispatch({
+      type: 'category/GetCategory',
+      payload: {
+        page: page || this.state.page, //页数
+        pageSize: pageSize //页面大小,
+      }
+    })
+  }
+  delCategory = (id) => {
+    this.props.dispatch({
+      type: 'category/DelCategory',
+      payload: {
+        int_id:id,
+      }
+    }).then((code)=> {
+      if(code === 200) {
+        this.GetCategory()
+      }
+    })
+  }
   render() {
     const columns = [{
       title: '分类名称',
-      dataIndex: 'categoryname',
-      key: 'categoryname',
+      dataIndex: 'name',
+      key: 'name',
     }, {
       title: '分类id',
-      dataIndex: 'categoryid',
-      key: 'categoryid',
-    },{
+      dataIndex: 'id',
+      key: 'id',
+    }, {
       title: '操作',
       key: 'action',
       render: (text, record) => (
         <div>
-          <a onClick={this.showModal}>编辑</a>
-          <Popconfirm title="确定要删除这个分类吗？" onConfirm={this.confirm} onCancel={this.cancel}>
-            <a style={{color:'red',paddingLeft:5}}>删除</a>
+          <a onClick={(e) => this.showModal(e, record.name)}>编辑</a>
+          <Popconfirm title="确定要删除这个分类吗？" onConfirm={() => this.delCategory(record.id)} onCancel={this.cancel}>
+            <a style={{ color: 'red', paddingLeft: 5 }}>删除</a>
           </Popconfirm>
         </div>
       ),
     }];
-    
-    const data = [{
-      key: '1',
-      categoryname: '奶粉辅食',
-      categoryid:'1',
-    },{
-      key: '2',
-      categoryname: '纸尿裤湿巾',
-      categoryid:'2',
-    },{
-      key: '3',
-      categoryname: '洗护用品',
-      categoryid:'3',
-    },{
-      key: '4',
-      categoryname: '童车座椅',
-      categoryid:'4',
-    },{
-      key: '5',
-      categoryname: '玩具',
-      categoryid:'5',
-    }];
-
+    const { categoryList } = this.props;
     const pagination = {
-      total: data.length,
+      total: categoryList.total,
       showSizeChanger: true,
       onShowSizeChange(current, pageSize) {
         //console.log('Current: ', current, '; PageSize: ', pageSize);
       },
-      onChange(current) {
+      onChange: (current) => {
+        this.setState({ page: current });
+        this.GetCategory(current);
         //console.log('Current: ', current);
       },
     };
 
     return (
       <div>
-        <Table columns={columns} dataSource={data} pagination={pagination}/>
+        <Table columns={columns} dataSource={categoryList.list} pagination={pagination} />
 
         {/*编辑分类模态框*/}
-        <CategoryModal 
+        <CategoryModal
+          name={this.state.editedName}
           visible={this.state.visible}
           handleOk={this.handleOk}
           handleCancel={this.handleCancel}
@@ -110,5 +122,10 @@ class ManageCategory extends React.Component {
   }
 }
 
-export default ManageCategory;
+export default connect((state) => {
+  return {
+    categoryList: state.category.categoryList
+  }
+})(ManageCategory);
+
 
