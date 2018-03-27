@@ -16,6 +16,6 @@ export async function DelCategory(params) {
   });
 }
 
-export async function GetCategory(params) {
+export async function GetCategory(params = {page: 1, pageSize: 8}) {
   return request(`/api/categories/?page=${params.page}&pageSize=${params.pageSize}`);
 }

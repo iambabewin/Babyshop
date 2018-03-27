@@ -6,7 +6,9 @@ export default {
   namespace: 'category',
 
   state: {
-    categoryList: [],
+    categoryList: {
+      list: []
+    },
   },
 
   subscriptions: {
