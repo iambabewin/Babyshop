@@ -15,8 +15,9 @@ class AddGoods extends React.Component {
       thumbUrl: 'http://img.boodoll.cn/pdt/img/b1/f500c8a4cccc49b8_380X380.jpg',
     }];
     const props = {
-      action: '//jsonplaceholder.typicode.com/posts/',
+      action: 'http://www.babyshop.com/api/preview/',
       listType: 'picture',
+      name: 'previews',
       defaultFileList: [...fileList],
     };
     const data = [
