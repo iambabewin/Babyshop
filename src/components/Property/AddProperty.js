@@ -10,7 +10,13 @@ class AddProperty extends React.Component {
     super(props);
     this.state = {
       propertys: [''],
+      categoryId: -1,
     }
+  }
+  componentDidMount() {
+    this.props.dispatch({
+      type: 'category/GetCategory'
+    })
   }
   onClickAdd = () => {
     const { propertys } = this.state;
@@ -19,7 +25,7 @@ class AddProperty extends React.Component {
   }
   onClickDel = (i) => {
     const { propertys } = this.state;
-    propertys.splice(i,1);
+    propertys.splice(i, 1);
     this.setState({ propertys });
   }
   inputChange = (e, i) => {
@@ -32,12 +38,13 @@ class AddProperty extends React.Component {
     const data = [
       <div className="input">
         <div className="title">商品分类：</div>
-        <Select defaultValue="默认为顶级分类" style={{ width: 260 }}>
-          <Option value="奶粉辅食">奶粉辅食</Option>
-          <Option value="纸尿裤湿巾">纸尿裤湿巾</Option>
-          <Option value="洗护用品">洗护用品</Option>
-          <Option value="童车座椅">童车座椅</Option>
-          <Option value="玩具">玩具</Option>
+        <Select style={{ width: 260 }}
+          onChange={(value) => { this.setState({ categoryId: value }) }}>
+          {
+            this.props.categoryList.list.map((category) => {
+              return <Option key={category.id} value={category.id}>{category.name}</Option>
+            })
+          }
         </Select>
       </div>,
       <div className="input">
@@ -57,12 +64,12 @@ class AddProperty extends React.Component {
                   return <div className="clickicon">
                     <Input value={property[i]} onChange={(e) => this.inputChange(e, i)} />
                     <Icon type="plus-circle-o" className="icon" onClick={this.onClickAdd} />
-                    <Icon type="minus-circle-o" className="icon-red" onClick={() => this.onClickDel(i)}/>
+                    <Icon type="minus-circle-o" className="icon-red" onClick={() => this.onClickDel(i)} />
                   </div>
                 } else {
                   return <div className="clickicon">
                     <Input value={property[i]} onChange={(e) => this.inputChange(e, i)} />
-                    <Icon type="minus-circle-o" className="icon-red" onClick={() => this.onClickDel(i)}/>
+                    <Icon type="minus-circle-o" className="icon-red" onClick={() => this.onClickDel(i)} />
                   </div>
                 }
               }
@@ -91,6 +98,10 @@ class AddProperty extends React.Component {
   }
 }
 
-export default AddProperty;
+export default connect((state) => {
+  return {
+    categoryList: state.category.categoryList
+  }
+})(AddProperty);
 
 

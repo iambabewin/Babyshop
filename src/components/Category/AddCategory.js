@@ -19,7 +19,14 @@ class AddCategory extends React.Component {
       payload:{
         name: this.state.categoryName,
       }
+  }).then(()=>{
+    this.onClean()
   })
+  }
+  onClean = () => {
+    this.setState({
+      categoryName:'',
+    })
   }
   render(){
     const { categoryName } = this.state;

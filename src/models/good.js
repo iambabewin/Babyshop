@@ -6,7 +6,9 @@ export default {
   namespace: 'good',
 
   state: {
-    
+    goodsList:{
+      list: []
+    }
   },
 
   subscriptions: {
@@ -17,15 +19,34 @@ export default {
 
   effects: {
     *addGood({ payload }, { call, put }) { 
-      console.log('add')
+      // console.log('add')
       const { data } = yield call(goodServeices.addGood, payload);
-    
       if(data && data.code === 200) {
         message.success(data.msg);
+        // console.log(data.code);
+        return data.code;
       } else {
         message.error(data.msg);
       }
     },
+
+
+    *getGoods({ payload }, { call, put }) {
+      try {
+        const {data} = yield call(goodServeices.getGoods, payload);
+        // console.log(data);
+        if (data && data.code === 200) {
+          yield put({ type: 'save',
+          payload: { goodsList: data.data } });
+          return data.data;
+        } else {
+          message.error(data.msg);
+        }
+      } catch (error) {
+        message.error(error.message);
+      }
+    },
+
   },
 
   reducers: {

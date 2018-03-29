@@ -1,11 +1,15 @@
 import request from '../utils/request';
 
-export function addGood({ int_categoryId, name, float_price, bool_hot, bool_recomment, property, preview, detail }) {
+export async function addGood(params) {
   return request('/api/goods/', {
     method: 'POST',
-    body: JSON.stringify({ int_categoryId, name, float_price, bool_hot, bool_recomment, property, preview, detail }),
+    body: JSON.stringify({ ...params }),
     headers: {
       'Content-Type': 'application/json'
     }
   });
+}
+
+export async function getGoods(params = {page: 1, pageSize: 8}) {
+  return request(`/api/goods/?page=${params.page}&pageSize=${params.pageSize}`);
 }

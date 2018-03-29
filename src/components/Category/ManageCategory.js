@@ -20,15 +20,6 @@ class ManageCategory extends React.Component {
   componentDidMount() {
     this.GetCategory()
   }
-
-  confirm = () => {
-    message.success('点击了确定');
-  }
-
-  cancel = () => {
-    message.error('点击了取消');
-  }
-
   showModal = (e, name) => {
     this.setState({
       visible: true,
@@ -37,13 +28,11 @@ class ManageCategory extends React.Component {
   }
 
   handleOk = (e) => {
-    //console.log(e);
     this.setState({
       visible: false,
     });
   }
   handleCancel = (e) => {
-    //console.log(e);
     this.setState({
       visible: false,
     });
@@ -63,10 +52,10 @@ class ManageCategory extends React.Component {
     this.props.dispatch({
       type: 'category/DelCategory',
       payload: {
-        int_id:id,
+        int_id: id,
       }
-    }).then((code)=> {
-      if(code === 200) {
+    }).then((code) => {
+      if (code === 200) {
         this.GetCategory()
       }
     })
@@ -86,29 +75,28 @@ class ManageCategory extends React.Component {
       render: (text, record) => (
         <div>
           <a onClick={(e) => this.showModal(e, record.name)}>编辑</a>
-          <Popconfirm title="确定要删除这个分类吗？" onConfirm={() => this.delCategory(record.id)} onCancel={this.cancel}>
+          <Popconfirm title="确定要删除这个分类吗？" onConfirm={() => this.delCategory(record.id)}>
             <a style={{ color: 'red', paddingLeft: 5 }}>删除</a>
           </Popconfirm>
         </div>
       ),
     }];
     const { categoryList } = this.props;
+    // console.log(categoryList)
     const pagination = {
       total: categoryList.total,
-      showSizeChanger: true,
-      onShowSizeChange(current, pageSize) {
-        //console.log('Current: ', current, '; PageSize: ', pageSize);
-      },
+      showSizeChanger: false,
       onChange: (current) => {
         this.setState({ page: current });
         this.GetCategory(current);
-        //console.log('Current: ', current);
       },
     };
 
     return (
       <div>
-        <Table columns={columns} dataSource={categoryList.list} pagination={pagination} />
+        <Table columns={columns}
+          rowKey={record => record.id}
+          dataSource={categoryList.list} pagination={pagination} />
 
         {/*编辑分类模态框*/}
         <CategoryModal
