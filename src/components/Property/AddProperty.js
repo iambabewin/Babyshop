@@ -10,7 +10,7 @@ class AddProperty extends React.Component {
     super(props);
     this.state = {
       propertys: [''],
-      categoryId: -1,
+      categoryId: '',
     }
   }
   componentDidMount() {

@@ -5,13 +5,17 @@ import EditGoods from './EditGoods'
 import '../style.less'
 
 const Option = Select.Option;
+const pageSize = 8;
 
 class ManageGoods extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      loadingList: true,
       visible: false,
-      page: 1,
+      current: 1,
+      editedName: '',
+      editedPrice: '',
     }
   }
   componentDidMount() {
@@ -20,11 +24,22 @@ class ManageGoods extends React.Component {
   getGoods = () => {
     this.props.dispatch({
       type: 'good/getGoods',
+      payload: {
+        page: 1,
+        pageSize: pageSize,
+      }
+    }).then(() => {
+      this.setState({ loadingList: false })
+    }).catch((err) => {
+      this.setState({ loadingList: false })
     })
   }
-  showModal = (e) => {
+  showModal = (e, record) => {
+    console.log('record', record)
     this.setState({
       visible: true,
+      editedName: record.name,
+      editedPrice: record.price,
     });
   }
   handleOk = (e) => {
@@ -64,22 +79,33 @@ class ManageGoods extends React.Component {
       key: 'action',
       render: (text, record) => (
         <div>
-          <a onClick={(e) => { console.log(record); this.showModal(e) }}>编辑</a>
+          <a onClick={(e) => this.showModal(e, record)}>编辑</a>
           <Popconfirm title="确定要删除这个商品吗？" onConfirm={this.confirm}>
             <a style={{ color: 'red', paddingLeft: 5 }}>删除</a>
           </Popconfirm>
         </div>
       ),
     }];
-    const data = [];
     const { goodsList } = this.props;
-    // console.log('goodsList',goodsList);
     const pagination = {
       total: goodsList.total,
-      showSizeChanger: false,
-      onChange: (current) => {
-        this.setState({ page: current });
-        this.GetCategory(current);
+      pageSize: pageSize,
+      onChange: (page) => {
+        this.setState({
+          current: page,
+          loadingList: true,
+        })
+        this.props.dispatch({
+          type: 'good/getGoods',
+          payload: {
+            page: page,
+            pageSize: pageSize,
+          }
+        }).then(() => {
+          this.setState({ loadingList: false })
+        }).catch((err) => {
+          this.setState({ loadingList: false })
+        })
       },
     };
 
@@ -87,9 +113,12 @@ class ManageGoods extends React.Component {
       <div>
         <Table className="manageGoods"
           rowKey={record => record.id}
+          loading={this.state.loadingList}
           columns={columns} dataSource={goodsList.list} pagination={pagination} />
-        {/*订单明细模态框*/}
+        {/*编辑商品模态框*/}
         <EditGoods
+          name={this.state.editedName}
+          price={this.state.editedPrice}
           visible={this.state.visible}
           handleOk={this.handleOk}
           handleCancel={this.handleCancel}

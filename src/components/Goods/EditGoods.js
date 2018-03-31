@@ -9,7 +9,9 @@ class EditGoods extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      categoryId: -1,
+      categoryId: '',
+      preview: [],
+      detail: []
     }
   }
   componentDidMount() {
@@ -18,24 +20,40 @@ class EditGoods extends React.Component {
     })
   }
   render() {
-    const fileList = [{
-      uid: -1,
-      name: 'xxx.png',
-      status: 'done',
-      url: 'http://img.boodoll.cn/pdt/img/v0/b28c70eeed65e6ca_380X380.jpg',
-      thumbUrl: 'http://img.boodoll.cn/pdt/img/v0/b28c70eeed65e6ca_380X380.jpg',
-    }];
-    const props = {
-      action: '//jsonplaceholder.typicode.com/posts/',
+    const previewFileList = [];
+    const detailFileList = [];
+    const previewProps = {
+      action: 'http://www.babyshop.com/api/preview/',
       listType: 'picture',
-      defaultFileList: [...fileList],
+      name: 'previews',
+      defaultFileList: [...previewFileList],
+      onChange: ({ file, fileList, event }) => {
+        // console.log(file)
+        if (file.response && file.response.code === 200) {
+          this.state.preview.push(file.response.data.fileName);
+          this.setState({ preview: this.state.preview });
+        }
+      }
+    };
+
+    const detailProps = {
+      action: 'http://www.babyshop.com/api/detail/',
+      listType: 'picture',
+      name: 'details',
+      defaultFileList: [...detailFileList],
+      onChange: ({ file, fileList, event }) => {
+        if (file.response && file.response.code === 200) {
+          this.state.detail.push(file.response.data.fileName);
+          this.setState({ detail: this.state.detail });
+        }
+      }
     };
     const data = [
       <div className="input">
         <div className="title">所属分类</div>
         <Select style={{ width: 260 }}
           onChange={(value) => this.setState({ categoryId: value })}>
-          {
+           {
             this.props.categoryList.list.map((category) => {
               return <Option key={category.id} value={category.id}>{category.name}</Option>
             })
@@ -44,15 +62,15 @@ class EditGoods extends React.Component {
       </div>,
       <div className="input" style={{ padding: '5px 20px' }}>
         <div className="title">商品名称：</div>
-        <Input defaultValue="Moony婴儿纸尿裤L54片" />
+        <Input value={this.props.name} />
         <div className="title" style={{ paddingLeft: 50 }}>商品价格：</div>
-        <Input defaultValue="338.00" />
+        <Input value={this.props.price} />
       </div>,
       <div className="input" style={{ padding: '5px 20px' }}>
         <div className="title">热卖商品：</div>
-        <Switch defaultChecked style={{ position: 'relative', top: 5 }} />
+        <Switch  style={{ position: 'relative', top: 5 }} />
         <div className="title" style={{ paddingLeft: 50 }}>店主推荐：</div>
-        <Switch defaultChecked style={{ position: 'relative', top: 5 }} />
+        <Switch  style={{ position: 'relative', top: 5 }} />
       </div>,
       <div className="input" style={{ padding: '5px 20px' }}>
         <div className="title">商品属性：</div>
@@ -67,7 +85,7 @@ class EditGoods extends React.Component {
       </div>,
       <div className="input" style={{ padding: '5px 20px' }}>
         <div className="title">商品预览图：</div>
-        <Upload {...props}>
+        <Upload {...previewProps}>
           <Button>
             <Icon type="upload" /> upload
               </Button>
@@ -75,7 +93,7 @@ class EditGoods extends React.Component {
       </div>,
       <div className="input" style={{ padding: '5px 20px' }}>
         <div className="title">商品详情图：</div>
-        <Upload {...props}>
+        <Upload {...detailProps}>
           <Button>
             <Icon type="upload" /> upload
             </Button>

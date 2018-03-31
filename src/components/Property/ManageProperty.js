@@ -6,28 +6,31 @@ import '../style.less'
 const Option = Select.Option;
 
 class ManageProperty extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      categoryId: '',
+    }
+  }
   confirm = () => {
     message.success('点击了确定');
   }
-  
-   cancel = () => {
-    message.error('点击了取消');
-  }
-  render(){
+  render() {
     const data = [
       <div className="input">
         <div className="title">所属分类：</div>
-        <Select defaultValue="请选择分类" style={{ width: 260 }}>
-          <Option value="奶粉辅食">奶粉辅食</Option>
-          <Option value="纸尿裤湿巾">纸尿裤湿巾</Option>
-          <Option value="洗护用品">洗护用品</Option>
-          <Option value="童车座椅">童车座椅</Option>
-          <Option value="玩具">玩具</Option>
+        <Select style={{ width: 260 }}
+          onChange={(value) => { this.setState({ categoryId: value }) }}>
+          {
+            this.props.categoryList.list.map((category) => {
+              return <Option key={category.id} value={category.id}>{category.name}</Option>
+            })
+          }
         </Select>
       </div>,
       <div className="property">
-        <div className="title"><span>属性id_01：</span><Input defaultValue="默认"/>
-        <Popconfirm title="确定要删除这个属性吗？" onConfirm={this.confirm} onCancel={this.cancel}>
+        <div className="title"><span>属性id_01：</span><Input defaultValue="默认" />
+          <Popconfirm title="确定要删除这个属性吗？" onConfirm={this.confirm}>
             <a className="delete">删除</a>
           </Popconfirm>
         </div>
@@ -36,22 +39,26 @@ class ManageProperty extends React.Component {
 
 
     ];
-    return(
+    return (
       <div className="addCategory">
         <div className="box">
-            <List
-              size="large"
-              header={<div><span className="circle"></span>管理商品属性</div>}
-              dataSource={data}
-              renderItem={item => (
+          <List
+            size="large"
+            header={<div><span className="circle"></span>管理商品属性</div>}
+            dataSource={data}
+            renderItem={item => (
               <List.Item>{item}</List.Item>)}
-            />
+          />
         </div>
       </div>
     )
   }
 }
 
-export default ManageProperty;
+export default connect((state) => {
+  return {
+    categoryList: state.category.categoryList
+  }
+})(ManageProperty);
 
 

@@ -10,6 +10,6 @@ export async function addGood(params) {
   });
 }
 
-export async function getGoods(params = {page: 1, pageSize: 8}) {
+export async function getGoods(params) {
   return request(`/api/goods/?page=${params.page}&pageSize=${params.pageSize}`);
 }

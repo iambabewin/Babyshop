@@ -12,13 +12,39 @@ class ManageCategory extends React.Component {
     super(props);
     this.state = {
       visible: false,
-      page: 1,
+      current: 1,
       editedName: '',
+      loadingList:true,
     }
   }
-
   componentDidMount() {
-    this.GetCategory()
+    this.getCategory()
+  }
+  /**获取所有分类 */
+  getCategory = () => {
+    this.props.dispatch({
+      type: 'category/GetCategory',
+      payload: {
+        page: 1, //页数
+        pageSize: pageSize //页面大小,
+      }
+    }).then(()=> {
+      this.setState({loadingList: false})
+    }).catch((err)=> {
+      this.setState({loadingList: false})
+    })
+  }
+  delCategory = (id) => {
+    this.props.dispatch({
+      type: 'category/DelCategory',
+      payload: {
+        int_id: id,
+      }
+    }).then((code) => {
+      if (code === 200) {
+        this.getCategory()
+      }
+    })
   }
   showModal = (e, name) => {
     this.setState({
@@ -36,29 +62,6 @@ class ManageCategory extends React.Component {
     this.setState({
       visible: false,
     });
-  }
-
-  /**获取所有分类 */
-  GetCategory = (page) => {
-    this.props.dispatch({
-      type: 'category/GetCategory',
-      payload: {
-        page: page || this.state.page, //页数
-        pageSize: pageSize //页面大小,
-      }
-    })
-  }
-  delCategory = (id) => {
-    this.props.dispatch({
-      type: 'category/DelCategory',
-      payload: {
-        int_id: id,
-      }
-    }).then((code) => {
-      if (code === 200) {
-        this.GetCategory()
-      }
-    })
   }
   render() {
     const columns = [{
@@ -85,10 +88,16 @@ class ManageCategory extends React.Component {
     // console.log(categoryList)
     const pagination = {
       total: categoryList.total,
-      showSizeChanger: false,
-      onChange: (current) => {
-        this.setState({ page: current });
-        this.GetCategory(current);
+      pageSize: pageSize,
+      onChange: (page) => {
+        this.setState({current: page});
+        this.props.dispatch({
+          type: 'category/GetCategory',
+          payload: {
+            page: 1,
+            pageSize: pageSize,
+          }
+        })
       },
     };
 
@@ -96,6 +105,7 @@ class ManageCategory extends React.Component {
       <div>
         <Table columns={columns}
           rowKey={record => record.id}
+          loading={this.state.loadingList}
           dataSource={categoryList.list} pagination={pagination} />
 
         {/*编辑分类模态框*/}
