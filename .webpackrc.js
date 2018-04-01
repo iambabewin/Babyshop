@@ -15,6 +15,12 @@ export default {
     },
 
   },
+  copy: [
+    {
+      from: "src/utils/particles.min.js",
+      to: "src/utils/"
+    }
+  ]
   
 }
 
