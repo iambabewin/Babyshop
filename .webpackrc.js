@@ -20,7 +20,12 @@ export default {
       from: "src/utils/particles.min.js",
       to: "src/utils/"
     }
-  ]
+  ],
+  env: {
+    development: {
+      extraBabelPlugins: ["dva-hmr"]
+    }
+  }
   
 }
 
