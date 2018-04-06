@@ -22,9 +22,18 @@ function checkStatus(response) {
  * @return {object}           An object containing either "data" or "err"
  */
 export default function request(url, options) {
-  return fetch(url, options)
+  const headers = options && options.headers ? options.headers : {};
+  const token = window.localStorage.getItem('token');
+
+  return fetch(url, { ...options, headers: {...headers, token} })
     .then(checkStatus)
     .then(parseJSON)
-    .then(data => ({ data }))
+    .then((data) => { 
+      if(data.code === 403) {
+        window.location = '/login';
+      }
+
+      return {data}; 
+    })
     .catch(err => ({ err }));
 }

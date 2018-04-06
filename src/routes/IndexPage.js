@@ -27,9 +27,9 @@ class IndexPage extends React.Component {
                 <Content style={{ padding: '0 50px' }}>
                     <Breadcrumb>
                         <Breadcrumb.Item>
-                            管理员：<span className="admin">Win</span>
+                            管理员：<span className="admin">{this.props.adminInfo.username}</span>
                             欢迎您！
-                    <a>[安全退出]</a>
+                    <a onClick={()=> this.props.dispatch({type: 'user/logout'})}>[安全退出]</a>
                         </Breadcrumb.Item>
                     </Breadcrumb>
                     <Layout style={{ padding: '24px 0', background: '#fff' }}>
@@ -56,4 +56,8 @@ class IndexPage extends React.Component {
         )
     }
 }
-export default connect()(IndexPage);
+export default connect((_)=> { 
+    return {
+        adminInfo: _.user.adminInfo
+    }
+ })(IndexPage);
