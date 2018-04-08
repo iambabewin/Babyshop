@@ -29,7 +29,7 @@ export default {
       if(data && data.code === 200) {
         message.success(data.msg);
         window.localStorage.setItem('token', data.data.token);
-        window.location = '/';
+        window.location = '/manageGoods';
       } else {
         message.error(data.msg);
       }

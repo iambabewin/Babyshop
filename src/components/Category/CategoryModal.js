@@ -21,7 +21,7 @@ class CategoryModal extends React.Component {
             </div>
             <div className="input">
                 <div className="title">分类名称修改为：</div>
-                <Input />
+                <Input onChange={(e)=> this.props.onChange(e.target.value)}/>
             </div>
         </Modal>
     )

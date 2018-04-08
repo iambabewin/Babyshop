@@ -11,13 +11,27 @@ class EditGoods extends React.Component {
     this.state = {
       categoryId: '',
       preview: [],
-      detail: []
+      detail: [],
+      isHot: false,
+      isRecomment: false,
+      propertys: []
     }
   }
   componentDidMount() {
     this.props.dispatch({
       type: 'category/GetCategory'
     })
+  }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.visible !== this.props.visible) {
+      this.setState({
+        categoryId: nextProps.editGood.categoryId,
+        isHot: nextProps.editGood.hot,
+        isRecomment: nextProps.editGood.recomment,
+        categoryId: nextProps.editGood.categoryId,
+      })
+      console.log(nextProps.editGood)
+    }
   }
   render() {
     const previewFileList = [];
@@ -52,8 +66,9 @@ class EditGoods extends React.Component {
       <div className="input">
         <div className="title">所属分类</div>
         <Select style={{ width: 260 }}
+          value={this.state.categoryId}
           onChange={(value) => this.setState({ categoryId: value })}>
-           {
+          {
             this.props.categoryList.list.map((category) => {
               return <Option key={category.id} value={category.id}>{category.name}</Option>
             })
@@ -68,20 +83,27 @@ class EditGoods extends React.Component {
       </div>,
       <div className="input" style={{ padding: '5px 20px' }}>
         <div className="title">热卖商品：</div>
-        <Switch  style={{ position: 'relative', top: 5 }} />
+        <Switch style={{ position: 'relative', top: 5 }} checked={this.state.isHot} onChange={(v)=> this.setState({isHot: v})} />
         <div className="title" style={{ paddingLeft: 50 }}>店主推荐：</div>
-        <Switch  style={{ position: 'relative', top: 5 }} />
+        <Switch style={{ position: 'relative', top: 5 }} checkd={this.state.isRecomment} onChange={(v)=> this.setState({isRecomment: v})}/>
       </div>,
       <div className="input" style={{ padding: '5px 20px' }}>
         <div className="title">商品属性：</div>
-        {/* <ul className="goodsproperty">
-          <li><span>商品名称：</span><Input /></li>
-          <li><span>奶粉阶段：</span><Input /></li>
-          <li><span>适用年龄：</span><Input /></li>
-          <li><span>规格：</span><Input /></li>
-          <li><span>产地：</span><Input /></li>
-          <li><span>奶粉类型：</span><Input /></li>
-        </ul> */}
+        {
+          (() => {
+            const category = this.props.categoryList.list.filter((category) => category.id === this.state.categoryId)[0] || { property: '' };
+            return category.property ? category.property.split(',').map((prop, i) => {
+              return (<li style={{ paddingRight: 10 }}>
+                <span>{prop}:</span>
+                <Input value={this.state.propertys[i]} onChange={(e)=> {
+                  this.state.propertys[i] = e.target.value;
+                  this.setState({propertys: this.state.propertys});
+                }} />
+              </li>)
+            }) : null
+          })()
+
+        }
       </div>,
       <div className="input" style={{ padding: '5px 20px' }}>
         <div className="title">商品预览图：</div>

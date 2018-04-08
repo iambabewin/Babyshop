@@ -34,8 +34,7 @@ class MenuList extends React.Component {
           <Menu.Item key="管理分类" ><Link to="/manageCategory">管理分类</Link></Menu.Item>
         </SubMenu>
         <SubMenu key="商品属性" title={<span><Icon type="calculator" /><span>商品属性</span></span>}>
-          <Menu.Item key="添加属性"><Link to="/addProperty">添加属性</Link></Menu.Item>
-          <Menu.Item key="管理属性"><Link to="/manageProperty">管理属性</Link></Menu.Item>
+          <Menu.Item key="管理属性"><Link to="/addProperty">管理属性</Link></Menu.Item>
         </SubMenu>
         
         <SubMenu key="销售订单" title={<span><Icon type="copy" /><span>销售订单</span></span>}>

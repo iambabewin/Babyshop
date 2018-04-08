@@ -114,14 +114,17 @@ class AddGoods extends React.Component {
       </div>,
       <div className="input" style={{ padding: '5px 20px' }}>
         <div className="title">商品属性：</div>
-        {/* <ul className="goodsproperty">
-          <li><span>商品名称：</span><Input /></li>
-          <li><span>奶粉阶段：</span><Input /></li>
-          <li><span>适用年龄：</span><Input /></li>
-          <li><span>规格：</span><Input /></li>
-          <li><span>产地：</span><Input /></li>
-          <li><span>奶粉类型：</span><Input /></li>
-        </ul> */}
+        <ul className="goodsproperty">
+          {
+            (()=> {
+              const category = this.props.categoryList.list.filter((category)=> category.id === this.state.categoryId)[0] || {property: ''};
+              return category.property ? category.property.split(',').map((prop)=> {
+                return (<li><span>{prop}:</span><Input /></li>)
+              }) : null
+            })()
+            
+          }
+        </ul>
       </div>,
       <div className="input" style={{ padding: '5px 20px' }}>
         <div className="title">商品预览图：</div>

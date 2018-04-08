@@ -11,7 +11,6 @@ import ManageGoods from '../components/Goods/ManageGoods';
 import AddCategory from '../components/Category/AddCategory';
 import ManageCategory from '../components/Category/ManageCategory';
 import AddProperty from '../components/Property/AddProperty';
-import ManageProperty from '../components/Property/ManageProperty';
 import CountOrders from '../components/CountOrders';
 
 const { SubMenu } = Menu;
@@ -43,7 +42,6 @@ class IndexPage extends React.Component {
                             <Route path="/addCategory" component={AddCategory} />
                             <Route path="/manageCategory" component={ManageCategory} />
                             <Route path="/addProperty" component={AddProperty} />
-                            <Route path="/manageProperty" component={ManageProperty} />
                             <Route path="/countOrders" component={CountOrders} />
                             {/* <Redirect from="/" to="/login" /> */}
                         </Content>
