@@ -15,17 +15,19 @@ class ManageCategory extends React.Component {
       current: 1,
       editedName: '',
       loadingList:true,
+      id:'',
+      newName:'',
     }
   }
   componentDidMount() {
     this.getCategory()
   }
   /**获取所有分类 */
-  getCategory = () => {
+  getCategory = (page) => {
     this.props.dispatch({
       type: 'category/GetCategory',
       payload: {
-        page: 1, //页数
+        page: page || 1, //页数
         pageSize: pageSize //页面大小,
       }
     }).then(()=> {
@@ -46,17 +48,32 @@ class ManageCategory extends React.Component {
       }
     })
   }
-  showModal = (e, name) => {
+  showModal = (e, record) => {
     this.setState({
       visible: true,
-      editedName: name
+      editedName: record.name,
+      id: record.id,
     });
   }
 
-  handleOk = (e) => {
-    this.setState({
-      visible: false,
-    });
+  handleOk = () => {
+    this.props.dispatch({
+      type:'category/EditCategory',
+      payload: {
+        int_id: this.state.id,
+        name: this.state.newName,
+      }
+    }).then((code)=> {
+      if(code === 200) {
+        this.setState({
+          visible: false,
+          newName: ''
+        });
+        this.getCategory();
+      }
+      
+    })
+    
   }
   handleCancel = (e) => {
     this.setState({
@@ -77,7 +94,7 @@ class ManageCategory extends React.Component {
       key: 'action',
       render: (text, record) => (
         <div>
-          <a onClick={(e) => this.showModal(e, record.name)}>编辑</a>
+          <a onClick={(e) => this.showModal(e, record)}>编辑</a>
           <Popconfirm title="确定要删除这个分类吗？" onConfirm={() => this.delCategory(record.id)}>
             <a style={{ color: 'red', paddingLeft: 5 }}>删除</a>
           </Popconfirm>
@@ -94,7 +111,7 @@ class ManageCategory extends React.Component {
         this.props.dispatch({
           type: 'category/GetCategory',
           payload: {
-            page: 1,
+            page: page,
             pageSize: pageSize,
           }
         })
@@ -110,6 +127,7 @@ class ManageCategory extends React.Component {
 
         {/*编辑分类模态框*/}
         <CategoryModal
+          onChange={(v)=> this.setState({newName: v})}
           name={this.state.editedName}
           visible={this.state.visible}
           handleOk={this.handleOk}

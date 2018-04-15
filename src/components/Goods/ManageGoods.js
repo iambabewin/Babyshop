@@ -16,6 +16,7 @@ class ManageGoods extends React.Component {
       current: 1,
       editedName: '',
       editedPrice: '',
+      editGood: {}
     }
   }
   componentDidMount() {
@@ -40,6 +41,7 @@ class ManageGoods extends React.Component {
       visible: true,
       editedName: record.name,
       editedPrice: record.price,
+      editGood: record
     });
   }
   handleOk = (e) => {
@@ -64,8 +66,8 @@ class ManageGoods extends React.Component {
       key: 'id',
     }, {
       title: '商品类型',
-      dataIndex: 'categoryId',
-      key: 'categoryId',
+      dataIndex: 'categoryName',
+      key: 'categoryName',
     }, {
       title: '商品名称',
       dataIndex: 'name',
@@ -117,6 +119,7 @@ class ManageGoods extends React.Component {
           columns={columns} dataSource={goodsList.list} pagination={pagination} />
         {/*编辑商品模态框*/}
         <EditGoods
+          editGood={this.state.editGood}
           name={this.state.editedName}
           price={this.state.editedPrice}
           visible={this.state.visible}
