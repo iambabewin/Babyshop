@@ -16,7 +16,8 @@ class AddGoods extends React.Component {
       isHot: false,
       isRecomment: false,
       preview: [],
-      detail: []
+      detail: [],
+      propertys: []
     }
   }
   componentDidMount() {
@@ -25,12 +26,13 @@ class AddGoods extends React.Component {
     })
   }
   save = () => {
-    const { categoryId, name, price, isHot, isRecomment, preview, detail } = this.state;
+    const { categoryId, name, price, isHot, isRecomment, preview, detail, propertys } = this.state;
     this.props.dispatch({
       type: 'good/addGood',
       payload: {
         int_categoryId: categoryId,
         name,
+        property: propertys.join(','),
         float_price: price,
         bool_hot: isHot,
         bool_recomment: isRecomment,
@@ -116,10 +118,16 @@ class AddGoods extends React.Component {
         <div className="title">商品属性：</div>
         <ul className="goodsproperty">
           {
-            (()=> {
-              const category = this.props.categoryList.list.filter((category)=> category.id === this.state.categoryId)[0] || {property: ''};
-              return category.property ? category.property.split(',').map((prop)=> {
-                return (<li><span>{prop}:</span><Input /></li>)
+            (() => {
+              const category = this.props.categoryList.list.filter((category) => category.id === this.state.categoryId)[0] || { property: '' };
+              return category.property ? category.property.split(',').map((prop, i) => {
+                return (<li style={{ paddingRight: 10 }}>
+                  <span>{prop}:</span>
+                  <Input value={this.state.propertys[i]} onChange={(e)=> {
+                    this.state.propertys[i] = e.target.value;
+                    this.setState({propertys: this.state.propertys});
+                  }} />
+                </li>)
               }) : null
             })()
             

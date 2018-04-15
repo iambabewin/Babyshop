@@ -25,6 +25,9 @@ export default {
     development: {
       extraBabelPlugins: ["dva-hmr"]
     }
+  },
+  theme: {
+    "primary-color": "#2FAEA8"
   }
   
 }

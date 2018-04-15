@@ -21,7 +21,7 @@ class MenuList extends React.Component {
         onClick={this.handleClick}
         style={{ width: 256 }}
         defaultOpenKeys={['商品设置']}
-        defaultSelectedKeys={['添加商品']}
+        defaultSelectedKeys={['管理商品']}
         selectedKeys={[this.state.current]}
         mode="inline"
       >
