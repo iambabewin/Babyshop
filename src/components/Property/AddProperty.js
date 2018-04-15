@@ -55,20 +55,20 @@ class AddProperty extends React.Component {
               if (this.state.propertys.length === 1) {
                 return (
                   <div className="clickicon">
-                    <Input value={property[i]} onChange={(e) => this.inputChange(e, i)} />
+                    <Input value={property} onChange={(e) => this.inputChange(e, i)} />
                     <Icon type="plus-circle-o" className="icon" onClick={this.onClickAdd} />
                   </div>
                 )
               } else {
                 if (i === this.state.propertys.length - 1) {
                   return <div className="clickicon">
-                    <Input value={property[i]} onChange={(e) => this.inputChange(e, i)} />
+                    <Input value={property} onChange={(e) => this.inputChange(e, i)} />
                     <Icon type="plus-circle-o" className="icon" onClick={this.onClickAdd} />
                     <Icon type="minus-circle-o" className="icon-red" onClick={() => this.onClickDel(i)} />
                   </div>
                 } else {
                   return <div className="clickicon">
-                    <Input value={property[i]} onChange={(e) => this.inputChange(e, i)} />
+                    <Input value={property} onChange={(e) => this.inputChange(e, i)} />
                     <Icon type="minus-circle-o" className="icon-red" onClick={() => this.onClickDel(i)} />
                   </div>
                 }
