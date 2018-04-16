@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'dva';
-import { Select, List, Input, Button, Upload, Icon, Switch } from 'antd';
+import { Select, List, Input, Button, Upload, Icon, Switch, message } from 'antd';
 import '../style.less'
 
 const Option = Select.Option;
@@ -15,8 +15,11 @@ class AddGoods extends React.Component {
       price: '',
       isHot: false,
       isRecomment: false,
+      propertys: [],
       preview: [],
-      detail: []
+      detail: [],
+      previewFileList: [],
+      detailFileList: [],
     }
   }
   componentDidMount() {
@@ -25,7 +28,7 @@ class AddGoods extends React.Component {
     })
   }
   save = () => {
-    const { categoryId, name, price, isHot, isRecomment, preview, detail } = this.state;
+    const { categoryId, name, price, isHot, isRecomment, preview, detail, propertys } = this.state;
     this.props.dispatch({
       type: 'good/addGood',
       payload: {
@@ -34,6 +37,7 @@ class AddGoods extends React.Component {
         float_price: price,
         bool_hot: isHot,
         bool_recomment: isRecomment,
+        property: propertys.join(','),
         preview: preview.join(','),
         detail: detail.join(','),
       }
@@ -51,24 +55,29 @@ class AddGoods extends React.Component {
       price: '',
       isHot: false,
       isRecomment: false,
+      propertys: [],
       preview: [],
-      detail: []
+      detail: [],
+      previewFileList: [],
+      detailFileList: [],
     })
   }
   render() {
-    const previewFileList = [];
-    const detailFileList = [];
-    const { categoryId, name, price, isHot, isRecomment, preview, detail } = this.state;
+    const { categoryId, name, price, isHot, isRecomment, preview, detail, propertys, previewFileList, detailFileList } = this.state;
     const previewProps = {
       action: 'http://www.babyshop.com/api/preview/',
       listType: 'picture',
       name: 'previews',
-      defaultFileList: [...previewFileList],
+      fileList: [...previewFileList],
       onChange: ({ file, fileList, event }) => {
-        // console.log(file)
-        if (file.response && file.response.code === 200) {
+        this.setState({previewFileList: fileList});
+        if (file.response && file.response.code === 200 && file.response.data.code === 200) {
           this.state.preview.push(file.response.data.fileName);
-          this.setState({ preview: this.state.preview });
+          this.setState({ 
+            preview: this.state.preview,
+           });
+        } else if(file.response && file.response.data && file.response.data.code && file.response.data.code !== 200) {
+          message.error('上传失败');
         }
       }
     };
@@ -77,11 +86,16 @@ class AddGoods extends React.Component {
       action: 'http://www.babyshop.com/api/detail/',
       listType: 'picture',
       name: 'details',
-      defaultFileList: [...detailFileList],
+      fileList: [...detailFileList],
       onChange: ({ file, fileList, event }) => {
-        if (file.response && file.response.code === 200) {
+        this.setState({detailFileList: fileList});
+        if (file.response && file.response.code === 200 && file.response.data.code === 200) {
           this.state.detail.push(file.response.data.fileName);
-          this.setState({ detail: this.state.detail });
+          this.setState({ 
+            detail: this.state.detail,
+           });
+        } else if(file.response && file.response.data && file.response.data.code && file.response.data.code !== 200) {
+          message.error('上传失败');
         }
       }
     };
@@ -118,8 +132,17 @@ class AddGoods extends React.Component {
           {
             (()=> {
               const category = this.props.categoryList.list.filter((category)=> category.id === this.state.categoryId)[0] || {property: ''};
-              return category.property ? category.property.split(',').map((prop)=> {
-                return (<li><span>{prop}:</span><Input /></li>)
+              return category.property ? category.property.split(',').map((prop, i)=> {
+                return (<li key={prop}>
+                          <span>{prop}:</span>
+                          <Input 
+                          value={propertys[i]} 
+                          onChange={(e)=> {
+                            propertys[i] = e.target.value;
+                            this.setState({propertys});
+                          }}
+                          />
+                        </li>)
               }) : null
             })()
             
