@@ -36,7 +36,7 @@ class ManageGoods extends React.Component {
     })
   }
   showModal = (e, record) => {
-    console.log('record', record)
+    // console.log('record', record)
     this.setState({
       visible: true,
       editedName: record.name,
@@ -54,11 +54,29 @@ class ManageGoods extends React.Component {
       visible: false,
     });
   }
-
-  confirm = () => {
-    message.success('点击了确定');
+  delGood = (id) => {
+    // console.log(id)
+    this.props.dispatch({
+      type: 'good/delGood',
+      payload: {
+        int_id: id,
+      }
+    }).then((code) => {
+      if (code === 200) {
+        this.props.dispatch({
+          type: 'good/getGoods',
+          payload: {
+            page: this.state.current,
+            pageSize: pageSize,
+          }
+        }).then(() => {
+          this.setState({ loadingList: false })
+        }).catch((err) => {
+          this.setState({ loadingList: false })
+        })
+      }
+    })
   }
-
   render() {
     const columns = [{
       title: '商品编号',
@@ -82,7 +100,7 @@ class ManageGoods extends React.Component {
       render: (text, record) => (
         <div>
           <a onClick={(e) => this.showModal(e, record)}>编辑</a>
-          <Popconfirm title="确定要删除这个商品吗？" onConfirm={this.confirm}>
+          <Popconfirm title="确定要删除这个商品吗？" onConfirm={() => this.delGood(record.id)}>
             <a style={{ color: 'red', paddingLeft: 5 }}>删除</a>
           </Popconfirm>
         </div>

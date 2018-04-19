@@ -30,6 +30,16 @@ export default {
       }
     },
 
+    *delGood({ payload }, { call, put }) {
+      const { data } = yield call(goodServeices.delGood, payload);
+      // console.log(data)
+      if (data && data.code === 200) {
+        message.success(data.msg);
+        return data.code;
+      } else {
+        message.error(data.msg || '删除商品失败')
+      }
+    },
 
     *getGoods({ payload }, { call, put }) {
       try {

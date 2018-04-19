@@ -17,7 +17,8 @@ class AddGoods extends React.Component {
       isRecomment: false,
       preview: [],
       detail: [],
-      propertys: []
+      propertys: [],
+      showUpload: true,
     }
   }
   componentDidMount() {
@@ -40,7 +41,7 @@ class AddGoods extends React.Component {
         detail: detail.join(','),
       }
     }).then((code) => {
-      if(code === 200){
+      if (code === 200) {
         this.onClean()
       }
     })
@@ -53,19 +54,22 @@ class AddGoods extends React.Component {
       price: '',
       isHot: false,
       isRecomment: false,
+      propertys: [],
       preview: [],
-      detail: []
+      detail: [],
+      showUpload: false,
     })
   }
   render() {
     const previewFileList = [];
     const detailFileList = [];
-    const { categoryId, name, price, isHot, isRecomment, preview, detail } = this.state;
+    const { categoryId, name, price, isHot, isRecomment, preview, detail, propertys } = this.state;
     const previewProps = {
       action: 'http://www.babyshop.com/api/preview/',
       listType: 'picture',
       name: 'previews',
       defaultFileList: [...previewFileList],
+      showUploadList: this.state.showUpload,
       onChange: ({ file, fileList, event }) => {
         // console.log(file)
         if (file.response && file.response.code === 200) {
@@ -80,6 +84,7 @@ class AddGoods extends React.Component {
       listType: 'picture',
       name: 'details',
       defaultFileList: [...detailFileList],
+      showUploadList: this.state.showUpload,
       onChange: ({ file, fileList, event }) => {
         if (file.response && file.response.code === 200) {
           this.state.detail.push(file.response.data.fileName);
@@ -123,14 +128,15 @@ class AddGoods extends React.Component {
               return category.property ? category.property.split(',').map((prop, i) => {
                 return (<li style={{ paddingRight: 10 }}>
                   <span>{prop}:</span>
-                  <Input value={this.state.propertys[i]} onChange={(e)=> {
-                    this.state.propertys[i] = e.target.value;
-                    this.setState({propertys: this.state.propertys});
-                  }} />
+                  <Input value={this.state.propertys[i]}
+                    onChange={(e) => {
+                      this.state.propertys[i] = e.target.value;
+                      this.setState({ propertys: this.state.propertys });
+                    }} />
                 </li>)
               }) : null
             })()
-            
+
           }
         </ul>
       </div>,

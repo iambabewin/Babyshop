@@ -13,3 +13,9 @@ export async function addGood(params) {
 export async function getGoods(params) {
   return request(`/api/goods/?page=${params.page}&pageSize=${params.pageSize}`);
 }
+
+export async function delGood(params) {
+  return request(`/api/goods/?int_id=${params.int_id}`, {
+    method: 'DELETE',
+  });
+}
