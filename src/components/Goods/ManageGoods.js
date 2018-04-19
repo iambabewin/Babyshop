@@ -14,9 +14,7 @@ class ManageGoods extends React.Component {
       loadingList: true,
       visible: false,
       current: 1,
-      editedName: '',
-      editedPrice: '',
-      editGood: {}
+      editedGood: {}
     }
   }
   componentDidMount() {
@@ -39,15 +37,51 @@ class ManageGoods extends React.Component {
     // console.log('record', record)
     this.setState({
       visible: true,
-      editedName: record.name,
-      editedPrice: record.price,
-      editGood: record
+      editedGood: {
+        ...record,
+        preview: record.preview.split(',').map((file, i)=> ({ uid: i, name: file, newName: file, status: 'done', url: `http://www.babyshop.com/upload/previews/${file}` })),
+        detail: record.detail.split(',').map((file, i)=> ({ uid: i, name: file, newName: file, status: 'done', url: `http://www.babyshop.com/upload/details/${file}` })),
+        propertys: record.property.split(','),
+        isHot: record.hot,
+        isRecomment: record.recomment,
+      }
     });
   }
   handleOk = (e) => {
-    this.setState({
-      visible: false,
+    console.log('ok')
+    const {editedGood} = this.state;
+
+    this.props.dispatch({
+      type: 'good/editGood',
+      payload: {
+        int_id: editedGood.id,
+        name: editedGood.name,
+        float_price: editedGood.price,
+        preview: editedGood.preview.map((pic)=> pic.newName).join(','),
+        detail: editedGood.detail.map(pic=> pic.newName).join(','),
+        property: editedGood.propertys.join(','),
+        bool_hot: editedGood.isHot,
+        bool_recomment: editedGood.isRecomment,
+        int_categoryId: editedGood.categoryId,
+      }
+    }).then(() => {
+      this.setState({
+        visible: false,
+        loadingList: true
+      });
+      this.props.dispatch({
+        type: 'good/getGoods',
+        payload: {
+          page: this.state.current,
+          pageSize: pageSize,
+        }
+      }).then(() => {
+        this.setState({ loadingList: false })
+      }).catch((err) => {
+        this.setState({ loadingList: false })
+      })
     });
+    
   }
   handleCancel = (e) => {
     this.setState({
@@ -137,9 +171,8 @@ class ManageGoods extends React.Component {
           columns={columns} dataSource={goodsList.list} pagination={pagination} />
         {/*编辑商品模态框*/}
         <EditGoods
-          editGood={this.state.editGood}
-          name={this.state.editedName}
-          price={this.state.editedPrice}
+          setState={(params)=> this.setState(params)}
+          editedGood={this.state.editedGood}
           visible={this.state.visible}
           handleOk={this.handleOk}
           handleCancel={this.handleCancel}

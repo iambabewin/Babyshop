@@ -57,11 +57,26 @@ export default {
       }
     },
 
+    *editGood({ payload }, { call, put }) {
+      try {
+        const {data} = yield call(goodServeices.editGood, payload);
+        // console.log(data);
+        if (data && data.code === 200) {
+          message.success(data.msg);
+        } else {
+          message.error(data.msg);
+        }
+
+        return data.code;
+      } catch (error) {
+        message.error(error.message);
+      }
+    },
   },
 
   reducers: {
     save(state, action) {
-    return { ...state, ...action.payload };
+      return { ...state, ...action.payload };
     },
   },
 

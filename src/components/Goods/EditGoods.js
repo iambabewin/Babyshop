@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'dva';
-import { Modal, Select, List, Input, Button, Upload, Icon, Switch } from 'antd';
+import { Modal, Select, List, Input, Button, Upload, Icon, Switch, message } from 'antd';
 import '../style.less';
 
 const Option = Select.Option;
@@ -9,12 +9,6 @@ class EditGoods extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      categoryId: '',
-      preview: [],
-      detail: [],
-      isHot: false,
-      isRecomment: false,
-      propertys: []
     }
   }
   componentDidMount() {
@@ -22,30 +16,24 @@ class EditGoods extends React.Component {
       type: 'category/GetCategory'
     })
   }
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.visible !== this.props.visible) {
-      this.setState({
-        categoryId: nextProps.editGood.categoryId,
-        isHot: nextProps.editGood.hot,
-        isRecomment: nextProps.editGood.recomment,
-        categoryId: nextProps.editGood.categoryId,
-      })
-      console.log(nextProps.editGood)
-    }
-  }
+
   render() {
-    const previewFileList = [];
-    const detailFileList = [];
+    const { editedGood } = this.props;
+    
     const previewProps = {
       action: 'http://www.babyshop.com/api/preview/',
       listType: 'picture',
       name: 'previews',
-      defaultFileList: [...previewFileList],
+      fileList: editedGood.preview,
       onChange: ({ file, fileList, event }) => {
-        // console.log(file)
+        this.props.setState({editedGood: Object.assign(editedGood, {preview: fileList})});
         if (file.response && file.response.code === 200) {
-          this.state.preview.push(file.response.data.fileName);
-          this.setState({ preview: this.state.preview });
+          editedGood.preview[editedGood.preview.length - 1].newName = file.response.data.fileName;
+          this.props.setState({ 
+            editedGood
+           });
+        } else if(file.response && file.response.data && file.response.data.code && file.response.data.code !== 200) {
+          message.error('上传失败');
         }
       }
     };
@@ -54,11 +42,16 @@ class EditGoods extends React.Component {
       action: 'http://www.babyshop.com/api/detail/',
       listType: 'picture',
       name: 'details',
-      defaultFileList: [...detailFileList],
+      fileList: editedGood.detail,
       onChange: ({ file, fileList, event }) => {
+        this.props.setState({editedGood: Object.assign(editedGood, {detail: fileList})});
         if (file.response && file.response.code === 200) {
-          this.state.detail.push(file.response.data.fileName);
-          this.setState({ detail: this.state.detail });
+          editedGood.detail[editedGood.detail.length - 1].newName = file.response.data.fileName;
+          this.props.setState({ 
+            editedGood
+           });
+        } else if(file.response && file.response.data && file.response.data.code && file.response.data.code !== 200) {
+          message.error('上传失败');
         }
       }
     };
@@ -66,8 +59,8 @@ class EditGoods extends React.Component {
       <div className="input">
         <div className="title">所属分类</div>
         <Select style={{ width: 260 }}
-          value={this.state.categoryId}
-          onChange={(value) => this.setState({ categoryId: value })}>
+          value={editedGood.categoryId}
+          onChange={(value) => this.props.setState({ editedGood: Object.assign(editedGood, {categoryId: value}) })}>
           {
             this.props.categoryList.list.map((category) => {
               return <Option key={category.id} value={category.id}>{category.name}</Option>
@@ -77,29 +70,41 @@ class EditGoods extends React.Component {
       </div>,
       <div className="input" style={{ padding: '5px 20px' }}>
         <div className="title">商品名称：</div>
-        <Input value={this.props.name} />
+        <Input value={editedGood.name} onChange={(e)=> this.props.setState({ editedGood: Object.assign(editedGood, {name: e.target.value}) })}/>
         <div className="title" style={{ paddingLeft: 50 }}>商品价格：</div>
-        <Input value={this.props.price} />
+        <Input value={editedGood.price} onChange={(e)=> this.props.setState({ editedGood: Object.assign(editedGood, {price: e.target.value}) })}/>
       </div>,
       <div className="input" style={{ padding: '5px 20px' }}>
         <div className="title">热卖商品：</div>
-        <Switch style={{ position: 'relative', top: 5 }} checked={this.state.isHot} onChange={(v)=> this.setState({isHot: v})} />
+        <Switch 
+        style={{ position: 'relative', top: 5 }} 
+        checked={editedGood.isHot} 
+        onChange={(v) => this.props.setState({ editedGood: Object.assign(editedGood, {isHot: v}) })} />
         <div className="title" style={{ paddingLeft: 50 }}>店主推荐：</div>
-        <Switch style={{ position: 'relative', top: 5 }} checkd={this.state.isRecomment} onChange={(v)=> this.setState({isRecomment: v})}/>
+        <Switch 
+        style={{ position: 'relative', top: 5 }} 
+        checked={editedGood.isRecomment} 
+        onChange={(v) => this.props.setState({ editedGood: Object.assign(editedGood, {isRecomment: v}) })} />
       </div>,
       <div className="input" style={{ padding: '5px 20px' }}>
         <div className="title">商品属性：</div>
         {
           (() => {
-            const category = this.props.categoryList.list.filter((category) => category.id === this.state.categoryId)[0] || { property: '' };
+            const category = this.props.categoryList.list.filter((category) => category.id === editedGood.categoryId)[0] || { property: '' };
+
             return category.property ? category.property.split(',').map((prop, i) => {
-              return (<li style={{ paddingRight: 10 }}>
-                <span>{prop}:</span>
-                <Input value={this.state.propertys[i]} onChange={(e)=> {
-                  this.state.propertys[i] = e.target.value;
-                  this.setState({propertys: this.state.propertys});
-                }} />
-              </li>)
+              return (
+                <li style={{ paddingRight: 10 }} key={prop}>
+                  <span>{prop}:</span>
+                  <Input 
+                  onChange={(e)=> {
+                    editedGood.propertys[i] = e.target.value;
+                    this.props.setState({ editedGood: Object.assign(editedGood, {propertys: editedGood.propertys}) })
+                  }}
+                  value={editedGood.propertys[i]}
+                  />
+                </li>
+              )
             }) : null
           })()
 
@@ -122,7 +127,7 @@ class EditGoods extends React.Component {
         </Upload>
       </div>,
       <div className="saveGoods">
-        <Button type="primary" className="save">保存</Button>
+        <Button type="primary" className="save" onClick={this.props.handleOk}>保存</Button>
       </div>
     ];
     return (

@@ -19,3 +19,12 @@ export async function delGood(params) {
     method: 'DELETE',
   });
 }
+export async function editGood(params) {
+  return request(`/api/goods/`, {
+    method: 'PUT',
+    body: JSON.stringify(params),
+    headers: {
+      'Content-Type': 'application/json'
+    },
+  });
+}
