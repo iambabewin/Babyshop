@@ -28,17 +28,17 @@ class OrderDetail extends React.Component {
     }];
     const data = [{
       key: '1',
-      goodsname: 'Moony尤妮佳婴儿拉拉裤女宝L54适用9-14kg*3包',
-      goodsprice:'338.00',
+      goodsname: '惠氏S-26铂臻健儿乐2段（6-12月）800g',
+      goodsprice:'258',
       goodsnum:'1',
-      receiver: '李萦萦',
+      receiver: '李宛萦',
       address: '广东省东莞市松山湖东莞理工学院'
     },{
       key: '1',
-      goodsname: '贝拉米Bellamys有机婴儿米粉米糊宝宝辅食',
-      goodsprice:'65.00',
-      goodsnum:'2',
-      receiver: '李萦萦',
+      goodsname: '美国香蕉宝宝Baby Banana 婴儿香蕉牙胶 硅胶磨牙棒咬胶',
+      goodsprice:'58',
+      goodsnum:'1',
+      receiver: '李宛萦',
       address: '广东省东莞市松山湖东莞理工学院'
     }];
 
