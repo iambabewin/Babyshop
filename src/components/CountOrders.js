@@ -1,5 +1,6 @@
 import React from 'react';
 import { Table, Icon, Select, Modal, Button  } from 'antd';
+import { connect } from 'dva';
 import OrderDetail from './OrderDetail';
 
 const Option = Select.Option;
@@ -11,6 +12,17 @@ class CountOrders extends React.Component {
       visible:false,
     }
   }
+
+  
+  componentDidMount() {
+    this.props.dispatch({
+      type: 'order/fetch',
+      payload: {
+        
+      }
+    });
+  }
+  
 
   showModal = (e) => {
       this.setState({
@@ -33,16 +45,21 @@ class CountOrders extends React.Component {
   render() {
     const columns = [{
       title: '订单id',
-      dataIndex: 'orderid',
-      key: 'orderid',
+      dataIndex: 'id',
+      key: 'id',
     }, {
       title: '用户',
-      dataIndex: 'user',
-      key: 'user',
+      dataIndex: 'address',
+      key: 'address',
+      render: (address)=> address ? address.name : '',
     }, {
       title: '总金额',
-      dataIndex: 'totalprice',
-      key: 'totalprice',
+      render: (record)=> {
+        let totalPirce = 0;
+        record.goodList.map((good)=> totalPirce += good.num * good.price);
+        
+        return totalPirce;
+      },
     }, {
       title: '订单状态',
       dataIndex: 'status',
@@ -77,7 +94,7 @@ class CountOrders extends React.Component {
     }];
 
     const pagination = {
-      total: data.length,
+      total: this.props.orderListInfo.total,
       showSizeChanger: true,
       onShowSizeChange(current, pageSize) {
         console.log('Current: ', current, '; PageSize: ', pageSize);
@@ -87,9 +104,11 @@ class CountOrders extends React.Component {
       },
     };
 
+    const { orderListInfo } = this.props;
+    console.log(orderListInfo);
     return (
       <div>
-        <Table columns={columns} dataSource={data} pagination={pagination}/>
+        <Table columns={columns} dataSource={orderListInfo.list} pagination={pagination}/>
         {/*订单明细模态框*/}
         <OrderDetail 
           visible={this.state.visible}
@@ -102,4 +121,8 @@ class CountOrders extends React.Component {
   }
 }
 
-export default CountOrders;
+export default connect((_)=> {
+  return {
+    orderListInfo: _.order.orderListInfo
+  }
+})(CountOrders);
