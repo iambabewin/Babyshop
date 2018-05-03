@@ -12,5 +12,8 @@ export default createModels({
       service: orderServices.fetchOrder,
       save: 'orderListInfo',
     },
+    deliver: {
+      service: orderServices.deliver,
+    }
   },
 });

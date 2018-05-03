@@ -4,27 +4,30 @@ import { Modal, Input, Table  } from 'antd';
 import './style.less';
 
 class OrderDetail extends React.Component {
+  
   render(){
+    const { address, goodList } = this.props.order;
+    
     const columns = [{
       title: '商品名称',
-      dataIndex: 'goodsname',
-      key: 'goodsname',
+      dataIndex: 'name',
+      key: 'name',
     }, {
       title: '商品价格',
-      dataIndex: 'goodsprice',
-      key: 'goodsprice',
+      dataIndex: 'price',
+      key: 'price',
     }, {
       title: '商品数量',
-      dataIndex: 'goodsnum',
-      key: 'goodsnum',
+      dataIndex: 'num',
+      key: 'num',
     },{
       title: '收货人',
-      dataIndex: 'receiver',
       key: 'receiver',
+      render: ()=> address.name,
     },{
       title: '收货地址',
-      dataIndex: 'address',
       key: 'address',
+      render: ()=> `${address.province} ${address.city} ${address.county} ${address.detail}`,
     }];
     const data = [{
       key: '1',
@@ -51,7 +54,7 @@ class OrderDetail extends React.Component {
             onOk={this.props.handleOk}
             onCancel={this.props.handleCancel}
         >
-            <Table columns={columns} dataSource={data} size="small" 
+            <Table columns={columns} dataSource={goodList} size="small" 
             pagination={false}
             />
         </Modal>

@@ -50,7 +50,7 @@ export default function createServices(services) {
           return request(service.url, {
             method: service.method,
             headers,
-            body: JSON.stringify({ ...service.params }),
+            body: JSON.stringify(params),
           });
         };
       }

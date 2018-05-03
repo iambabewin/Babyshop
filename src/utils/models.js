@@ -22,7 +22,7 @@ export default function createModels(model) {
           message.error('请求出错，请检查网络是否正常。');
         }
 
-        return data.code;
+        return data;
       }
     } else {
       return effect;

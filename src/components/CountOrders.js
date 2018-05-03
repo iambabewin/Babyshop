@@ -2,6 +2,7 @@ import React from 'react';
 import { Table, Icon, Select, Modal, Button  } from 'antd';
 import { connect } from 'dva';
 import OrderDetail from './OrderDetail';
+import { stat } from 'fs';
 
 const Option = Select.Option;
 
@@ -10,23 +11,48 @@ class CountOrders extends React.Component {
     super(props);
     this.state = {
       visible:false,
+      page: 1,
+      pageSize: 10,
+      selectedOrder: {
+        address: {},
+        goodList: [],
+      }
     }
   }
 
   
   componentDidMount() {
+    this.fetchOrderList(1, 10);
+  }
+
+  fetchOrderList = (page, pageSize)=> {
     this.props.dispatch({
       type: 'order/fetch',
       payload: {
-        
+        page,
+        pageSize,
       }
     });
   }
   
+  deliver = (order)=> {
+    this.props.dispatch({
+      type: 'order/deliver',
+      payload: {
+        id: order.id,
+        int_status: 1,
+      }
+    }).then((data)=> {
+      if(data.code === 200) {
+        this.fetchOrderList(this.state.page, this.state.pageSize);
+      }
+    });
+  }
 
-  showModal = (e) => {
+  showModal = (e, order) => {
       this.setState({
-      visible: true,
+        visible: true,
+        selectedOrder: order,
       });
   }
   handleOk = (e) => {
@@ -55,10 +81,10 @@ class CountOrders extends React.Component {
     }, {
       title: '总金额',
       render: (record)=> {
-        let totalPirce = 0;
-        record.goodList.map((good)=> totalPirce += good.num * good.price);
+        let totalPrice = 0;
+        record.goodList.map((good)=> totalPrice += good.num * good.price);
         
-        return totalPirce;
+        return totalPrice;
       },
     }, {
       title: '订单状态',
@@ -73,14 +99,18 @@ class CountOrders extends React.Component {
       key: 'detail',
       render: (text, record) => (
         <div>
-          <a onClick={this.showModal}>明细</a>
+          <a onClick={(e)=> this.showModal(e, record)}>明细</a>
         </div>
       ),
     }, {
       title: '发货状态',
       key: 'deliverstatus',
       render: (text, record) => (
-          <Button type="primary" style={{fontSize:14}}>发货</Button>
+          <Button 
+          type="primary" 
+          style={{fontSize:14}} 
+          onClick={()=> this.deliver(record)}
+          >发货</Button>
       ),
     }];
     
@@ -96,21 +126,30 @@ class CountOrders extends React.Component {
     const pagination = {
       total: this.props.orderListInfo.total,
       showSizeChanger: true,
-      onShowSizeChange(current, pageSize) {
-        console.log('Current: ', current, '; PageSize: ', pageSize);
+      onShowSizeChange: (current, pageSize)=> {
+        this.setState({
+          page: current,
+          pageSize,
+        });
+        this.fetchOrderList(current, pageSize);        
       },
-      onChange(current) {
-        console.log('Current: ', current);
+      onChange: (current, pageSize)=> {
+        this.setState({
+          page: current,
+          pageSize,
+        });
+        this.fetchOrderList(current, pageSize);
       },
     };
 
     const { orderListInfo } = this.props;
-    console.log(orderListInfo);
+    
     return (
       <div>
         <Table columns={columns} dataSource={orderListInfo.list} pagination={pagination}/>
         {/*订单明细模态框*/}
         <OrderDetail 
+          order={this.state.selectedOrder}
           visible={this.state.visible}
           handleOk={this.handleOk}
           handleCancel={this.handleCancel}
