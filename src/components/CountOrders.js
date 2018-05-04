@@ -1,10 +1,12 @@
 import React from 'react';
 import { Table, Icon, Select, Modal, Button  } from 'antd';
 import { connect } from 'dva';
+import { date } from 'windlike-utils';
 import OrderDetail from './OrderDetail';
-import { stat } from 'fs';
 
 const Option = Select.Option;
+const STATUS = ['已付款', '已发货', '已完成'];
+const formatDate = date.formatDate('yy-MM-dd hh:mm:ss');
 
 class CountOrders extends React.Component {
   constructor(props){
@@ -84,16 +86,21 @@ class CountOrders extends React.Component {
         let totalPrice = 0;
         record.goodList.map((good)=> totalPrice += good.num * good.price);
         
-        return totalPrice;
+        return totalPrice.toLocaleString(
+          'zh', 
+          { style: 'currency', currency: 'cny', minimumFractionDigits: 2 }
+        );
       },
     }, {
       title: '订单状态',
       dataIndex: 'status',
       key: 'status',
+      render: (status)=> STATUS[status]
     }, {
       title: '下单时间',
       dataIndex: 'time',
       key: 'time',
+      render: (time)=> formatDate(time*1000),
     }, {
       title: '订单明细',
       key: 'detail',
@@ -105,13 +112,13 @@ class CountOrders extends React.Component {
     }, {
       title: '发货状态',
       key: 'deliverstatus',
-      render: (text, record) => (
+      render: (text, record) => record.status === 0 ? (
           <Button 
           type="primary" 
           style={{fontSize:14}} 
           onClick={()=> this.deliver(record)}
           >发货</Button>
-      ),
+      ) : ('已发货')
     }];
     
     const data = [{
