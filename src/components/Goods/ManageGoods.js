@@ -1,8 +1,9 @@
 import React from 'react';
 import { connect } from 'dva';
-import { Table, Icon, Select, Popconfirm, message } from 'antd';
+import { Table, Icon, Select, Popconfirm, message, Input } from 'antd';
 import EditGoods from './EditGoods'
 import '../style.less'
+import { stat } from 'fs';
 
 const Option = Select.Option;
 const pageSize = 8;
@@ -14,17 +15,55 @@ class ManageGoods extends React.Component {
       loadingList: true,
       visible: false,
       current: 1,
-      editedGood: {}
+      editedGood: {},
+      search: '',
+      selectedType: '',
     }
   }
+  
   componentDidMount() {
-    this.getGoods();
-  }
-  getGoods = () => {
+    this.getGoods({
+      page: 1
+    });
     this.props.dispatch({
+      type: 'category/GetCategory',
+    });
+  }
+
+  search = (e)=> {
+    const word = e.target.value;
+    
+    if(e.keyCode === 13) {
+      this.setState({
+        search: word,
+      })
+      
+      this.getGoods({
+        search: word,
+      });  
+    }
+    
+  }
+
+  handleSelect = (selectedType)=> {
+    this.setState({
+      selectedType,
+    });
+
+    this.getGoods({
+      selectedType,
+    });
+  }
+  
+  getGoods = ({page, search, selectedType}) => {
+      this.setState({ loadingList: true });
+
+      this.props.dispatch({
       type: 'good/getGoods',
       payload: {
-        page: 1,
+        page: page || this.state.current,
+        search: search === undefined ? this.state.search : search,
+        categoryId: selectedType === undefined ? this.state.selectedType : selectedType,
         pageSize: pageSize,
       }
     }).then(() => {
@@ -164,7 +203,25 @@ class ManageGoods extends React.Component {
     };
 
     return (
-      <div>
+      <div id="good-manager">
+        <header>
+          <span className="item">
+            <label>商品类型</label>
+            <Select 
+            defaultValue=""
+            onChange={this.handleSelect}
+            >
+              <Option key="all" value="">全部</Option>
+              {
+                this.props.categoryList.list.map((category)=> (<Option key={category.id} value={category.id}>{category.name}</Option>))
+              }
+            </Select>
+          </span>
+          <span className="item">
+            <label>搜索商品</label>
+            <Input onKeyDown={this.search}></Input>          
+          </span>
+        </header>
         <Table className="manageGoods"
           rowKey={record => record.id}
           loading={this.state.loadingList}
@@ -185,5 +242,6 @@ class ManageGoods extends React.Component {
 export default connect((state) => {
   return {
     goodsList: state.good.goodsList,
+    categoryList: state.category.categoryList,
   }
 })(ManageGoods);
