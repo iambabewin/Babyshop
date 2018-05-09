@@ -2,17 +2,17 @@
     /*管理商品*/
     .manageGoods {
         .ant-table-row-indent {
-            padding-left: 18px!important;
+            padding-left: 18px !important;
         }
     }
     /*添加分类*/
     .addCategory {
-        .box{
-            padding:24px;
+        .box {
+            padding: 24px;
             background: #FFFFFF;
-            box-shadow: 0 2px 14px 0 rgba(0,0,0,0.09);
+            box-shadow: 0 2px 14px 0 rgba(0, 0, 0, 0.09);
             border-radius: 4px;
-            .ant-list-header .circle{
+            .ant-list-header .circle {
                 display: inline-block;
                 width: 8px;
                 height: 8px;
@@ -28,32 +28,32 @@
                     height: 32px;
                     line-height: 32px;
                     margin-right: 10px;
-                    white-space:nowrap;                 
+                    white-space: nowrap;
                 }
                 .goodsproperty {
                     display: flex;
                     flex-wrap: wrap;
                     justify-content: space-between;
                     padding-left: 0;
-                    li{
+                    li {
                         list-style: none;
-                        width:30%;
-                        margin:5px 0;
+                        width: 30%;
+                        margin: 5px 0;
                     }
                 }
                 .icon {
                     position: relative;
-                    top:5px;
+                    top: 5px;
                     margin-left: 5px;
                     font-size: 20px;
-                    color:#2FAEA8;
+                    color: #2FAEA8;
                 }
                 .icon-red {
                     position: relative;
-                    top:5px;
+                    top: 5px;
                     margin-left: 5px;
                     font-size: 20px;
-                    color:red;
+                    color: red;
                 }
                 .addProperty {
                     display: block;
@@ -68,16 +68,16 @@
                 }
             }
             .property {
-                padding:20px;
+                padding: 20px;
                 .title {
                     display: flex;
                     justify-content: flex-start;
-                    margin:10px 0;
+                    margin: 10px 0;
                     span {
                         display: block;
                         height: 32px;
                         line-height: 32px;
-                        white-space:nowrap; 
+                        white-space: nowrap;
                     }
                 }
             }
@@ -86,13 +86,11 @@
                 .save {
                     background: #2FAEA8;
                     border-color: #2FAEA8;
-                    margin:20px;
+                    margin: 20px;
                 }
             }
-            
         }
     }
-
     /*编辑分类模态框*/
     .categoryModal {
         .input {
@@ -105,15 +103,35 @@
             }
         }
     }
-
     /*添加属性*/
     .addCategory {
         .delete {
-            white-space:nowrap;
+            white-space: nowrap;
             color: red;
             position: relative;
-            top:7px;
-            left:5px;
+            top: 7px;
+            left: 5px;
+        }
+    }
+    #good-manager {
+        header {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 24px;
+            .item {
+                margin-left: 16px;
+                label {
+                    display: inline-block;
+                    font-weight: bold;
+                    margin-right: 8px;
+                }
+            }
+            .ant-select {
+                width: 120px;
+            }
+            .ant-input {
+                width: 240px;
+            }
         }
     }
 }

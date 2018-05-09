@@ -11,7 +11,7 @@ export async function addGood(params) {
 }
 
 export async function getGoods(params) {
-  return request(`/api/goods/?page=${params.page}&pageSize=${params.pageSize}`);
+  return request(`/api/goods/?page=${params.page}&pageSize=${params.pageSize}&search=${params.search}&categoryId=${params.categoryId}`);
 }
 
 export async function delGood(params) {
