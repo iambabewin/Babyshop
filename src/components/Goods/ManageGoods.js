@@ -48,6 +48,7 @@ class ManageGoods extends React.Component {
   handleSelect = (selectedType)=> {
     this.setState({
       selectedType,
+      current:1,
     });
 
     this.getGoods({
@@ -56,12 +57,13 @@ class ManageGoods extends React.Component {
   }
   
   getGoods = ({page, search, selectedType}) => {
-      this.setState({ loadingList: true });
-
+      this.setState({ 
+        loadingList: true,
+      });
       this.props.dispatch({
       type: 'good/getGoods',
       payload: {
-        page: page || this.state.current,
+        page: 1,
         search: search === undefined ? this.state.search : search,
         categoryId: selectedType === undefined ? this.state.selectedType : selectedType,
         pageSize: pageSize,
@@ -87,8 +89,8 @@ class ManageGoods extends React.Component {
     });
   }
   handleOk = (e) => {
-    console.log('ok')
-    const {editedGood} = this.state;
+    // console.log('ok')
+    const {editedGood,search,selectedType} = this.state;
 
     this.props.dispatch({
       type: 'good/editGood',
@@ -113,6 +115,8 @@ class ManageGoods extends React.Component {
         payload: {
           page: this.state.current,
           pageSize: pageSize,
+          search:  this.state.search,
+          categoryId: this.state.selectedType,
         }
       }).then(() => {
         this.setState({ loadingList: false })
@@ -141,6 +145,8 @@ class ManageGoods extends React.Component {
           payload: {
             page: this.state.current,
             pageSize: pageSize,
+            search:  this.state.search,
+            categoryId: this.state.selectedType,
           }
         }).then(() => {
           this.setState({ loadingList: false })
@@ -182,7 +188,8 @@ class ManageGoods extends React.Component {
     const { goodsList } = this.props;
     const pagination = {
       total: goodsList.total,
-      pageSize: pageSize,
+      pageSize: pageSize, 
+      current: this.state.current,
       onChange: (page) => {
         this.setState({
           current: page,
@@ -193,6 +200,8 @@ class ManageGoods extends React.Component {
           payload: {
             page: page,
             pageSize: pageSize,
+            search:  this.state.search,
+            categoryId: this.state.selectedType,
           }
         }).then(() => {
           this.setState({ loadingList: false })
