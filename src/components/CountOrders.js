@@ -42,7 +42,7 @@ class CountOrders extends React.Component {
       type: 'order/deliver',
       payload: {
         id: order.id,
-        int_status: 1,
+        status: 1,
       }
     }).then((data)=> {
       if(data.code === 200) {
@@ -112,24 +112,14 @@ class CountOrders extends React.Component {
     }, {
       title: '发货状态',
       key: 'deliverstatus',
-      render: (text, record) => record.status === 0 ? (
-          <Button 
-          type="primary" 
-          style={{fontSize:14}} 
-          onClick={()=> this.deliver(record)}
-          >发货</Button>
-      ) : ('已发货')
+      render: (text, record) => 
+        record.status == 0 ? <Button 
+        type="primary" 
+        style={{fontSize:14}} 
+        onClick={()=> this.deliver(record)}
+        >发货</Button>
+       : <span>已发货</span>
     }];
-    
-    const data = [{
-      key: '1',      
-      orderid: '201804191111110123',
-      user: '李宛萦',
-      totalprice:'316',
-      status:'已付款',        
-      time:'2018-4-10 09:22:08',
-    }];
-
     const pagination = {
       total: this.props.orderListInfo.total,
       showSizeChanger: true,

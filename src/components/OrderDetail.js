@@ -29,22 +29,6 @@ class OrderDetail extends React.Component {
       key: 'address',
       render: ()=> `${address.province} ${address.city} ${address.county} ${address.detail}`,
     }];
-    const data = [{
-      key: '1',
-      goodsname: '惠氏S-26铂臻健儿乐2段（6-12月）800g',
-      goodsprice:'258',
-      goodsnum:'1',
-      receiver: '李宛萦',
-      address: '广东省东莞市松山湖东莞理工学院'
-    },{
-      key: '1',
-      goodsname: '美国香蕉宝宝Baby Banana 婴儿香蕉牙胶 硅胶磨牙棒咬胶',
-      goodsprice:'58',
-      goodsnum:'1',
-      receiver: '李宛萦',
-      address: '广东省东莞市松山湖东莞理工学院'
-    }];
-
     return(
         <Modal
             width={1000}
