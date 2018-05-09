@@ -132,7 +132,7 @@ class EditGoods extends React.Component {
     ];
     return (
       <Modal
-        width={800}
+        width={880}
         mask={true}
         footer={false}
         title="编辑商品"
